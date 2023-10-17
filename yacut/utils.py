@@ -2,14 +2,14 @@ from random import choices
 
 from . import db
 from .models import URLMap
-from .constants import CHOICES
+from .constants import CHOICES, MAX_AMOUNT_OF_ROLLS
 
 
 def get_unique_short_id() -> str:
     """Фун-ция для генерации случайной ссылки."""
-    custom_id = "".join(choices(CHOICES, k=6))
+    custom_id = "".join(choices(CHOICES, k=MAX_AMOUNT_OF_ROLLS))
     while db.session.query(URLMap.query.filter(URLMap.short == custom_id).exists()).scalar():
-        custom_id = "".join(choices(CHOICES, k=6))
+        custom_id = "".join(choices(CHOICES, k=MAX_AMOUNT_OF_ROLLS))
     return custom_id
 
 

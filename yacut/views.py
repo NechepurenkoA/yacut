@@ -12,9 +12,15 @@ from .utils import get_unique_short_id, form_and_add_url_to_db
 def index_view():
     form = URLForm()
     if form.validate_on_submit():
-        custom_id = (get_unique_short_id() if form.custom_id.data is None or form.custom_id.data == ''
-                     else form.custom_id.data)
-        url_model = form_and_add_url_to_db(form.original_link.data, custom_id)
+        custom_id = (
+            get_unique_short_id() if form.custom_id.data is None
+            or form.custom_id.data == ''
+            else form.custom_id.data
+        )
+        url_model = form_and_add_url_to_db(
+            form.original_link.data,
+            custom_id
+        )
         flash(urljoin(request.base_url, url_model.short), category='link')
         return render_template('create_short_url.html', form=form)
     return render_template('create_short_url.html', form=form)
@@ -22,7 +28,7 @@ def index_view():
 
 @app.route('/<string:short>', methods=['GET'])
 def redirect_url(short: str):
-    url = URLMap.query.filter_by(short=short).first()
+    url = URLMap.query.filter_by(short=short).first_or_404()
     if url is None:
         abort(404)
     return redirect(url.original)
