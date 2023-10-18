@@ -39,14 +39,13 @@ def create_short_url():
             'Предложенный вариант короткой ссылки уже существует.',
             HTTPStatus.BAD_REQUEST
         )
-    else:
-        url = form_and_add_url_to_db(data['url'], custom_id)
-        return jsonify(
-            {
-                'url': url.original,
-                'short_link': urljoin(base_url, url.short)
-            }
-        ), HTTPStatus.CREATED
+    url = form_and_add_url_to_db(data['url'], custom_id)
+    return jsonify(
+        {
+            'url': url.original,
+            'short_link': urljoin(base_url, url.short)
+        }
+    ), HTTPStatus.CREATED
 
 
 @app.route('/api/id/<string:short>/', methods=['GET'])
